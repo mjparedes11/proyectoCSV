@@ -4,6 +4,7 @@ import java.io.{BufferedWriter, File, FileWriter, OutputStreamWriter}
 import java.io.File
 import cats.*
 import cats.implicits.*
+import scala. math. Fractional. Implicits. infixFractionalOps
 
 object proyect {
   @main def mainScriptGenerator(): Unit ={
@@ -36,22 +37,32 @@ object proyect {
       val sumaCuadrados = lista.map(x => math.pow(x - media, 2)).sum
       math.pow(sumaCuadrados / (lista.length - 1), 0.5)
 
+    def moda(datos: List[String]): List[String] = {
+      if (datos.isEmpty) return List()
+
+      val frecuencias = datos.groupBy(identity).view.mapValues(_.size).toMap
+      val maxFrecuencia = frecuencias.values.max
+
+      frecuencias.filter { case (_, freq) => freq == maxFrecuencia }.keys.toList
+    }
+
     println(campo.min)
     println(campo.max)
     println(prom(campo))
     println(desviaEstandar(campo))
 
-    val colString: String = "imdb_id"
+    val colString: String = "original_language"
 
     val colSt: List[String] = dataMap.flatMap(row => row.get(colString))
     //Valores únicos
     //colSt.distinct.foreach(print)
     //conteofrecuencias
-    println()
+    println("Frequencias:")
     println(colSt
       .groupBy(identity)
       .map(x => (x._1.trim, x._2.length)))
 
+    println("Moda"+moda(colSt))
 
     //generación de scripts
     val filePath = "C:\\Users\\USUARIO\\Desktop\\scriptproyecto.sql"
